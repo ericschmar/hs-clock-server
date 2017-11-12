@@ -20,21 +20,21 @@ function setup() {
     small_circle_radius = 100;
     primary_x = c_x + b_radius
     primary_y = c_y
-    //circles = [{"x": primary_x, "y": primary_y}, {"x":c_x - b_radius, "y":c_y},
-                //{"x":c_x, "y": c_y + b_radius}, {"x":c_x, "y": c_y - b_radius}]
+
     circles = [new Circle(), new Circle(), new Circle(), new Circle()]
 
     background(227, 204, 109)
 
     noStroke();
     fill(104, 71, 30, 220);
-    n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
-    ellipse(n[0], n[1], small_circle_radius);
-    fill(50);
-    text("Tempo Rogue", c_x + b_radius + 55, c_y);
-    fill(104, 71, 30, 220);
+    //n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
+    //ellipse(n[0], n[1], small_circle_radius);
+    //fill(50);
+    //text("Tempo Rogue", c_x + b_radius + 55, c_y);
+    //fill(104, 71, 30, 220);
 
     generate_circle_locs()
+    ellipse(circles[0].x, circles[0].y, small_circle_radius)
     ellipse(circles[1].x, circles[1].y, small_circle_radius)
     ellipse(circles[2].x, circles[2].y, small_circle_radius)
     ellipse(circles[3].x, circles[3].y, small_circle_radius)
@@ -49,28 +49,28 @@ function draw() {
     textSize(16);
 
     fill(227, 204, 109);
-    rect(c_x - 750, c_y - 400, 1400, 800)
+    rect(c_x - 750, c_y - 400, 1400, 810)
 
-    stroke(0);
-    fill(255, 0);
+    //stroke(0);
+    //fill(255, 0);
     // big main circle
-    ellipse(c_x, c_y, b_diameter, b_diameter);
+    //ellipse(c_x, c_y, b_diameter, b_diameter);
     // smaller main circle 
-    ellipse(c_x, c_y, s_diameter, s_diameter)
+    //ellipse(c_x, c_y, s_diameter, s_diameter)
     // small circles 
     // color, then alpha value
     
     noStroke();
     fill(104, 71, 30, 220);
-    n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
-    ellipse(n[0], n[1], small_circle_radius);
+    //n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
+    
     /*
     fill(50);
     text("Tempo Rogue", c_x + b_radius + 55, c_y);
     */
     fill(104, 71, 30, 220);
 
-    //generate_circle_locs()
+    ellipse(circles[0].x, circles[0].y, small_circle_radius);
     ellipse(circles[1].x, circles[1].y, small_circle_radius)
     ellipse(circles[2].x, circles[2].y, small_circle_radius)
     ellipse(circles[3].x, circles[3].y, small_circle_radius)
@@ -78,12 +78,11 @@ function draw() {
     ellipse(c_x, c_y - s_radius, 60, 60)
     
     time_step_circles()
-    push();
-
-    fill(0);
-    rect(c_x, c_y, b_radius, 2);
-    rect(c_x, c_y, 2, 0 - s_radius);
-    pop();
+    //push();
+    //fill(0);
+    //rect(c_x, c_y, b_radius, 2);
+    //rect(c_x, c_y, 2, 0 - s_radius);
+    //pop();
     
     loadImage("static/hs-logo.png", function(img) {
         image(img, 0, 0, 200, 200);
@@ -94,7 +93,6 @@ function draw() {
 }
 
 function seed_random_circle_loc(c){
-    print(c)
     orig_x = c.original[0]
     orig_y = c.original[1]
     rand_x = random(orig_x - 35, orig_x + 35) 
@@ -108,12 +106,10 @@ function seed_random_circle_loc(c){
 Time step 1px of the distance to the goal location of each circle
 */
 function time_step_circles(){
-    console.log("time step")
-    for(i = 1; i < circles.length; i++){
+    for(i = 0; i < circles.length; i++){
         cur = circles[i]
-        if(ceil(cur.x) == ceil(cur.goal[0]) && ceil(cur.y) == ceil(cur.goal[1])){
+        if(abs(cur.x - cur.goal[0]) < 3 || abs(cur.x - cur.goal[1]) < 3){
             seed_random_circle_loc(cur)
-            console.log("reseting location")
         }
         if((cur.x - cur.goal[0]) > 0){
             cur.x = cur.x - 1
@@ -132,8 +128,10 @@ function time_step_circles(){
 
 function generate_circle_locs(){
     angles = [PI + 0.5, PI + 1, PI + 1.5]
-    for(i = 1; i < circles.length; i++){
+    for(i = 0; i < circles.length; i++){
+        console.log(circles[i])
         n = rotato_potato(circles[i].x, circles[i].y, 0 - angles[i - 1])
+        console.log("n: " + n)
         if(circles[i].original[0] == 0){
             circles[i].original = [n[0], n[1]]
             console.log("update" + " " + circles[i].original[0] + " " + circles[i].original[1])
