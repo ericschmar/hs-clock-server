@@ -9,7 +9,7 @@ function Circle(){
 
 function setup() {   
     createCanvas(windowWidth, windowHeight);
-    frameRate(15)
+    frameRate(60)
     angleMode(RADIANS)
     c_x = windowWidth/2;
     c_y = windowHeight/2 + 100;
@@ -26,15 +26,15 @@ function setup() {
     background(227, 204, 109)
 
     noStroke();
-    fill(104, 71, 30, 220);
+    fill(157, 231, 255, 220);
     //n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
     //ellipse(n[0], n[1], small_circle_radius);
     //fill(50);
     //text("Tempo Rogue", c_x + b_radius + 55, c_y);
     //fill(104, 71, 30, 220);
-
     generate_circle_locs()
     ellipse(circles[0].x, circles[0].y, small_circle_radius)
+    fill(104, 71, 30, 220);
     ellipse(circles[1].x, circles[1].y, small_circle_radius)
     ellipse(circles[2].x, circles[2].y, small_circle_radius)
     ellipse(circles[3].x, circles[3].y, small_circle_radius)
@@ -68,14 +68,15 @@ function draw() {
     fill(50);
     text("Tempo Rogue", c_x + b_radius + 55, c_y);
     */
-    fill(104, 71, 30, 220);
 
+    fill(157, 231, 255, 220);
     ellipse(circles[0].x, circles[0].y, small_circle_radius);
+    fill(104, 71, 30, 220);
     ellipse(circles[1].x, circles[1].y, small_circle_radius)
     ellipse(circles[2].x, circles[2].y, small_circle_radius)
     ellipse(circles[3].x, circles[3].y, small_circle_radius)
 
-    ellipse(c_x, c_y - s_radius, 60, 60)
+    ellipse(c_x, c_y, 60, 60)
     
     time_step_circles()
     //push();
@@ -85,7 +86,7 @@ function draw() {
     //pop();
     
     loadImage("static/hs-logo.png", function(img) {
-        image(img, 0, 0, 200, 200);
+        image(img, 10, 10, 200, 200);
       });
     noStroke();
     textSize(40);
@@ -95,8 +96,8 @@ function draw() {
 function seed_random_circle_loc(c){
     orig_x = c.original[0]
     orig_y = c.original[1]
-    rand_x = random(orig_x - 35, orig_x + 35) 
-    rand_y = random(orig_y - 35, orig_y + 35)
+    rand_x = random(orig_x - 25, orig_x + 25) 
+    rand_y = random(orig_y - 25, orig_y + 25)
     console.log("seed" + " " + rand_x + " " + rand_y)
     c.goal[0] = rand_x
     c.goal[1] = rand_y
@@ -112,25 +113,25 @@ function time_step_circles(){
             seed_random_circle_loc(cur)
         }
         if((cur.x - cur.goal[0]) > 0){
-            cur.x = cur.x - 1
+            cur.x = cur.x - 0.15
         }
         else {
-            cur.x = cur.x + 1
+            cur.x = cur.x + 0.15
         }
         if((cur.y - cur.goal[1] > 0)){
-            cur.y = cur.y - 1
+            cur.y = cur.y - 0.15
         }
         else {
-            cur.y = cur.y + 1
+            cur.y = cur.y + 0.15
         }
     }
 }
 
 function generate_circle_locs(){
-    angles = [PI + 0.5, PI + 1, PI + 1.5]
+    angles = [1.1, PI + 0.5, PI + 1, PI + 1.5]
     for(i = 0; i < circles.length; i++){
         console.log(circles[i])
-        n = rotato_potato(circles[i].x, circles[i].y, 0 - angles[i - 1])
+        n = rotato_potato(circles[i].x, circles[i].y, 0 - angles[i])
         console.log("n: " + n)
         if(circles[i].original[0] == 0){
             circles[i].original = [n[0], n[1]]
