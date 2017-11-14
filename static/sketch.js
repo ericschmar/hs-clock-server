@@ -4,6 +4,7 @@ function Circle(){
     this.y = primary_y
     this.goal = [0, 0]
     this.original = [0,0]
+    this.diameter = small_circle_radius
 }
 
 
@@ -21,7 +22,7 @@ function setup() {
     primary_x = c_x + b_radius
     primary_y = c_y
 
-    circles = [new Circle(), new Circle(), new Circle(), new Circle()]
+    circles = [new Circle(), new Circle(), new Circle(), new Circle(), new Circle()]
 
     background(227, 204, 109)
 
@@ -68,15 +69,13 @@ function draw() {
     fill(50);
     text("Tempo Rogue", c_x + b_radius + 55, c_y);
     */
-
+    //draw the main circle which will always be the first one
     fill(157, 231, 255, 220);
-    ellipse(circles[0].x, circles[0].y, small_circle_radius);
+    ellipse(circles[0].x, circles[0].y, circles[0].diameter)
     fill(104, 71, 30, 220);
-    ellipse(circles[1].x, circles[1].y, small_circle_radius)
-    ellipse(circles[2].x, circles[2].y, small_circle_radius)
-    ellipse(circles[3].x, circles[3].y, small_circle_radius)
-
-    ellipse(c_x, c_y, 60, 60)
+    draw_all_circles()
+    fill(68, 46, 23, 250)
+    ellipse(c_x, c_y, 40, 40)
     
     time_step_circles()
     //push();
@@ -93,12 +92,20 @@ function draw() {
     text("Hearthstone Meta Clock", 250, 125);
 }
 
+function draw_all_circles(){
+    circles.forEach(function(c, index){
+        if(index != 0) {
+            ellipse(c.x, c.y, c.diameter)
+        }
+    })
+}
+
 function seed_random_circle_loc(c){
     orig_x = c.original[0]
     orig_y = c.original[1]
     rand_x = random(orig_x - 25, orig_x + 25) 
     rand_y = random(orig_y - 25, orig_y + 25)
-    console.log("seed" + " " + rand_x + " " + rand_y)
+    //console.log("seed" + " " + rand_x + " " + rand_y)
     c.goal[0] = rand_x
     c.goal[1] = rand_y
 }
@@ -128,14 +135,14 @@ function time_step_circles(){
 }
 
 function generate_circle_locs(){
-    angles = [1.1, PI + 0.5, PI + 1, PI + 1.5]
+    angles = [1.1, PI + 0.5, PI + 1, PI + 1.5, PI + 2]
     for(i = 0; i < circles.length; i++){
-        console.log(circles[i])
+        //console.log(circles[i])
         n = rotato_potato(circles[i].x, circles[i].y, 0 - angles[i])
-        console.log("n: " + n)
+        //console.log("n: " + n)
         if(circles[i].original[0] == 0){
             circles[i].original = [n[0], n[1]]
-            console.log("update" + " " + circles[i].original[0] + " " + circles[i].original[1])
+           //console.log("update" + " " + circles[i].original[0] + " " + circles[i].original[1])
         }
         circles[i].x = n[0]
         circles[i].y = n[1]
@@ -158,7 +165,10 @@ function mouseClicked() {
         d = dist(mouseX, mouseY, circles[i].x, circles[i].y)
         if (d < 100){
             console.log("moused over circle")
-
+            circles[i].diameter = small_circle_radius + 50
+        }
+        else {
+            circles[i].diameter = small_circle_radius
         }
     }
 }
