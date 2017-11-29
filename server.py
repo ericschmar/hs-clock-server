@@ -16,3 +16,7 @@ def serve_logo():
 @app.route('/style.css')
 def serve_css():
     return send_from_directory(directory='static', filename='style.css')
+
+@app.route('/top')
+def serve_top_decks():
+    return send_from_directory(directory='/Users/ericschmar/sharedfolder/hs-clock/preprocess/deck_counts', filename='initial.json')
