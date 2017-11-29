@@ -12,6 +12,18 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     frameRate(60)
     angleMode(RADIANS)
+    // fetch the top decks
+    fetch("http://localhost:5000/top")
+    .then(function(response) {
+        return response.json()
+    })
+    .then(function(j) {
+        console.log(j)
+    })
+    .catch(function(err) {
+        console.log(err)
+    })
+    
     c_x = windowWidth/2;
     c_y = windowHeight/2 + 100;
     b_diameter = 650;
