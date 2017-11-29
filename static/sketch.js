@@ -12,18 +12,20 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     frameRate(60)
     angleMode(RADIANS)
+    top_decks = null
     // fetch the top decks
     fetch("http://localhost:5000/top")
     .then(function(response) {
         return response.json()
     })
     .then(function(j) {
-        console.log(j)
+        console.log("fetched top decks")
+        top_decks = j
     })
     .catch(function(err) {
         console.log(err)
     })
-    
+
     c_x = windowWidth/2;
     c_y = windowHeight/2 + 100;
     b_diameter = 650;
@@ -63,39 +65,28 @@ function draw() {
 
     fill(227, 204, 109);
     rect(c_x - 750, c_y - 400, 1400, 810)
-
-    //stroke(0);
-    //fill(255, 0);
-    // big main circle
-    //ellipse(c_x, c_y, b_diameter, b_diameter);
-    // smaller main circle 
-    //ellipse(c_x, c_y, s_diameter, s_diameter)
-    // small circles 
-    // color, then alpha value
-    
+   
     noStroke();
     fill(104, 71, 30, 220);
-    //n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
-    
-    /*
-    fill(50);
-    text("Tempo Rogue", c_x + b_radius + 55, c_y);
-    */
+
     //draw the main circle which will always be the first one
     fill(157, 231, 255, 220);
     ellipse(circles[0].x, circles[0].y, circles[0].diameter)
+    if (top_decks == null || top_decks == undefined) {
+    }
+    else {
+        console.log("top")
+        console.log(top_decks)
+        text(top_decks[0], circles[0].x, circles[0].y - circles[0].diameter - 10)
+    }
+
     fill(104, 71, 30, 220);
     draw_all_circles()
     fill(68, 46, 23, 250)
     ellipse(c_x, c_y, 40, 40)
     
     time_step_circles()
-    //push();
-    //fill(0);
-    //rect(c_x, c_y, b_radius, 2);
-    //rect(c_x, c_y, 2, 0 - s_radius);
-    //pop();
-    
+
     loadImage("static/hs-logo.png", function(img) {
         image(img, 10, 10, 200, 200);
       });
