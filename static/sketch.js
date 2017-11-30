@@ -13,7 +13,14 @@ function setup() {
     frameRate(60)
     angleMode(RADIANS)
     top_decks = null
+    deck_0 = ""
+    deck_1 = ""
+    deck_2 = ""
+    deck_3 = ""
+    deck_4 = ""
+    decks = [deck_0, deck_1, deck_2, deck_3, deck_4]
     // fetch the top decks
+    // TODO: NEED THE CORRECT ORDER OF DECKS OR THE RANK
     fetch("http://localhost:5000/top")
     .then(function(response) {
         return response.json()
@@ -21,6 +28,9 @@ function setup() {
     .then(function(j) {
         console.log("fetched top decks")
         top_decks = j
+        Object.keys(top_decks).forEach(function(key, index){
+            decks[index] = key
+        })
     })
     .catch(function(err) {
         console.log(err)
@@ -28,7 +38,7 @@ function setup() {
 
     c_x = windowWidth/2;
     c_y = windowHeight/2 + 100;
-    b_diameter = 650;
+    b_diameter = 640;
     s_diameter = 300;
     b_radius = b_diameter / 2;
     s_radius = s_diameter / 2;
@@ -61,10 +71,10 @@ function setup() {
 }
   
 function draw() {
-    textSize(16);
+    textSize(24);
 
     fill(227, 204, 109);
-    rect(c_x - 750, c_y - 400, 1400, 810)
+    rect(c_x - 750, c_y - 410, 1400, 810)
    
     noStroke();
     fill(104, 71, 30, 220);
@@ -72,15 +82,13 @@ function draw() {
     //draw the main circle which will always be the first one
     fill(157, 231, 255, 220);
     ellipse(circles[0].x, circles[0].y, circles[0].diameter)
-    if (top_decks == null || top_decks == undefined) {
-    }
-    else {
-        console.log("top")
-        console.log(top_decks)
-        text(top_decks[0], circles[0].x, circles[0].y - circles[0].diameter - 10)
-    }
+    fill(68, 46, 23, 250)
+    //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 25)
+    text(decks[0], circles[0].original[0] + 100, circles[0].original[1] - 50)
+    stroke(0)
+    line(circles[0].x + 50, circles[0].y, circles[0].original[0] + 95, circles[0].original[1] - 45)
+    noStroke()
 
-    fill(104, 71, 30, 220);
     draw_all_circles()
     fill(68, 46, 23, 250)
     ellipse(c_x, c_y, 40, 40)
