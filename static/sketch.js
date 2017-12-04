@@ -6,7 +6,7 @@ function Circle(){
     this.original = [0,0]
     this.diameter = small_circle_radius
     this.text = ""
-    this.is_clicked = false
+    this.is_clicked = true
 }
 
 
@@ -33,23 +33,25 @@ function setup() {
     deck_4 = ""
     decks = [deck_0, deck_1, deck_2, deck_3, deck_4]
     // fetch the top decks
-    // TODO: NEED THE CORRECT ORDER OF DECKS OR THE RANK
     fetch("http://localhost:5000/top")
     .then(function(response) {
         return response.json()
     })
     .then(function(j) {
-        console.log("fetched top decks")
-        top_decks = j
-        total = top_decks["total"]
-        /*
-        Object.keys(top_decks).forEach(function(key, index) {
-            if(key == "total") return
-            sum += top_decks[key].count
-        })*/
+        temp_decks = j
+        total = temp_decks["total"]
+        top_decks = []
+        //turn the JS object of objects into array of object
+        Object.keys(temp_decks).forEach(function(key, index){
+            if(key=="total") return
+            top_decks.push({"name":key, "count":temp_decks[key].count})
+        })
+        //sort the top decks
+        top_decks.sort(function(a, b) {return a.count < b.count})
+        //add the name and percentage to the circles and decks arrays
         Object.keys(top_decks).forEach(function(key, index){
             if(key == "total") return 
-            decks[index] = key
+            decks[index] = top_decks[index].name
             t = "" +((top_decks[key].count / total) * 100)
             circles[index].text = t.substring(0, 4)
         })
@@ -89,14 +91,10 @@ function draw() {
     ellipse(circles[0].x, circles[0].y, circles[0].diameter)
     if(circles[0].is_clicked){
         fill(68, 46, 23, 250)
-        text(circles[0].text + "%", circles[0].x - 25, circles[0].y + 10)
+        text(circles[0].text + "%", circles[0].x - 30, circles[0].y + 10)
     }
     fill(68, 46, 23, 250)
     text(decks[0], circles[0].x + 30, circles[0].y - circles[0].diameter + 35)
-    //text(decks[0], circles[0].original[0] + 100, circles[0].original[1] - 50)
-    //stroke(0)
-    //line(circles[0].x + 50, circles[0].y, circles[0].original[0] + 95, circles[0].original[1] - 45)
-    //noStroke()
 
     draw_all_circles()
     fill(68, 46, 23, 250)
@@ -114,41 +112,34 @@ function draw() {
 
 function draw_all_circles(){
     circles.forEach(function(c, index){
+        //don't redraw the main circle
         if(index != 0) {
+            //make the text to the upper right of these
             if(index == 1 || index == 2) {
-                //new_x_y = rotato_potato(circles[index].x + 50, circles[index].y, 1.1)
                 fill(68, 46, 23, 250)
-                //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
-                //text(decks[index], circles[index].original[0] + 50, circles[index].original[1] - 50)
                 text(decks[index], circles[index].x + 30, circles[index].y - circles[index].diameter + 40)
-                //stroke(0)
-                //line(new_x_y[0], new_x_y[1], circles[index].original[0] + 95, circles[index].original[1] - 45)
-                //noStroke()
             }
+            //make the text to the lower right of these
             else {
                 fill(68, 46, 23, 250)
-                //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
                 text(decks[index], circles[index].x + 40, circles[index].y + circles[index].diameter - 30)
-                //stroke(0)
-                //line(circles[index].x + 50, circles[index].y, circles[index].original[0] + 105, circles[index].original[1] + 45)
-                //noStroke()
             }
 
             ellipse(c.x, c.y, c.diameter)
             if(c.is_clicked){
                 fill(157, 231, 255, 220);
-                text(c.text + "%", c.x - 25, c.y + 10)
+                text(c.text + "%", c.x - 30, c.y + 10)
             }
         }
     })
 }
 
+//seed the new circle locations randomly, bounded by a 20x20 box around the original x, y
 function seed_random_circle_loc(c){
     orig_x = c.original[0]
     orig_y = c.original[1]
     rand_x = random(orig_x - 20, orig_x + 20) 
     rand_y = random(orig_y - 20, orig_y + 20)
-    //console.log("seed" + " " + rand_x + " " + rand_y)
     c.goal[0] = rand_x
     c.goal[1] = rand_y
 }
@@ -177,21 +168,20 @@ function time_step_circles(){
     }
 }
 
+//generate the original x, y onto the large circle
 function generate_circle_locs(){
     angles = [1.1, PI + 0.5, PI + 1, PI + 1.5, PI + 2]
     for(i = 0; i < circles.length; i++){
-        //console.log(circles[i])
         n = rotato_potato(circles[i].x, circles[i].y, 0 - angles[i])
-        //console.log("n: " + n)
         if(circles[i].original[0] == 0){
             circles[i].original = [n[0], n[1]]
-           //console.log("update" + " " + circles[i].original[0] + " " + circles[i].original[1])
         }
         circles[i].x = n[0]
         circles[i].y = n[1]
     }
 }
 
+//function to place a circle correctly around the edge of a circle
 function rotato_potato(x, y, angle){
     x1 = x - c_x
     y1 = y - c_y
@@ -201,6 +191,8 @@ function rotato_potato(x, y, angle){
     return [x_new + c_x, y_new + c_y]
 }
 
+/*
+// function to detect if a circle was clicked on
 function mouseClicked() {
     // Check if mouse is inside the circle
     var d = dist(mouseX, mouseY, 360, 200);
@@ -217,4 +209,4 @@ function mouseClicked() {
             circles[i].is_clicked = false
         }
     }
-}
+}*/
