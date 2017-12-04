@@ -5,13 +5,26 @@ function Circle(){
     this.goal = [0, 0]
     this.original = [0,0]
     this.diameter = small_circle_radius
+    this.text = ""
+    this.is_clicked = false
 }
 
 
 function setup() {   
     createCanvas(windowWidth, windowHeight);
     frameRate(60)
-    angleMode(RADIANS)
+    angleMode(RADIANS)    
+    c_x = windowWidth/2;
+    c_y = windowHeight/2 + 100;
+    b_diameter = 600;
+    s_diameter = 300;
+    b_radius = b_diameter / 2;
+    s_radius = s_diameter / 2;
+    small_circle_radius = 100;
+    primary_x = c_x + b_radius
+    primary_y = c_y
+
+    circles = [new Circle(), new Circle(), new Circle(), new Circle(), new Circle()]
     top_decks = null
     deck_0 = ""
     deck_1 = ""
@@ -28,35 +41,27 @@ function setup() {
     .then(function(j) {
         console.log("fetched top decks")
         top_decks = j
+        total = top_decks["total"]
+        /*
+        Object.keys(top_decks).forEach(function(key, index) {
+            if(key == "total") return
+            sum += top_decks[key].count
+        })*/
         Object.keys(top_decks).forEach(function(key, index){
+            if(key == "total") return 
             decks[index] = key
+            t = "" +((top_decks[key].count / total) * 100)
+            circles[index].text = t.substring(0, 4)
         })
     })
     .catch(function(err) {
         console.log(err)
     })
 
-    c_x = windowWidth/2;
-    c_y = windowHeight/2 + 100;
-    b_diameter = 600;
-    s_diameter = 300;
-    b_radius = b_diameter / 2;
-    s_radius = s_diameter / 2;
-    small_circle_radius = 100;
-    primary_x = c_x + b_radius
-    primary_y = c_y
-
-    circles = [new Circle(), new Circle(), new Circle(), new Circle(), new Circle()]
-
     background(227, 204, 109)
 
     noStroke();
     fill(157, 231, 255, 220);
-    //n = rotato_potato(circles[0].x, circles[0].y, 0 - 1.1)
-    //ellipse(n[0], n[1], small_circle_radius);
-    //fill(50);
-    //text("Tempo Rogue", c_x + b_radius + 55, c_y);
-    //fill(104, 71, 30, 220);
     generate_circle_locs()
     ellipse(circles[0].x, circles[0].y, small_circle_radius)
     fill(104, 71, 30, 220);
@@ -82,8 +87,12 @@ function draw() {
     //draw the main circle which will always be the first one
     fill(157, 231, 255, 220);
     ellipse(circles[0].x, circles[0].y, circles[0].diameter)
+    if(circles[0].is_clicked){
+        fill(68, 46, 23, 250)
+        text(circles[0].text + "%", circles[0].x - 25, circles[0].y + 10)
+    }
     fill(68, 46, 23, 250)
-    text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
+    text(decks[0], circles[0].x + 30, circles[0].y - circles[0].diameter + 35)
     //text(decks[0], circles[0].original[0] + 100, circles[0].original[1] - 50)
     //stroke(0)
     //line(circles[0].x + 50, circles[0].y, circles[0].original[0] + 95, circles[0].original[1] - 45)
@@ -111,7 +120,7 @@ function draw_all_circles(){
                 fill(68, 46, 23, 250)
                 //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
                 //text(decks[index], circles[index].original[0] + 50, circles[index].original[1] - 50)
-                text(decks[index], circles[index].x + 50, circles[index].y - 50)
+                text(decks[index], circles[index].x + 30, circles[index].y - circles[index].diameter + 40)
                 //stroke(0)
                 //line(new_x_y[0], new_x_y[1], circles[index].original[0] + 95, circles[index].original[1] - 45)
                 //noStroke()
@@ -119,13 +128,17 @@ function draw_all_circles(){
             else {
                 fill(68, 46, 23, 250)
                 //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
-                text(decks[index], circles[index].x + 50, circles[index].y + 70)
+                text(decks[index], circles[index].x + 40, circles[index].y + circles[index].diameter - 30)
                 //stroke(0)
                 //line(circles[index].x + 50, circles[index].y, circles[index].original[0] + 105, circles[index].original[1] + 45)
                 //noStroke()
             }
 
             ellipse(c.x, c.y, c.diameter)
+            if(c.is_clicked){
+                fill(157, 231, 255, 220);
+                text(c.text + "%", c.x - 25, c.y + 10)
+            }
         }
     })
 }
@@ -141,7 +154,7 @@ function seed_random_circle_loc(c){
 }
 
 /*
-Time step 1px of the distance to the goal location of each circle
+Time step 0.15px of the distance to the goal location of each circle
 */
 function time_step_circles(){
     for(i = 0; i < circles.length; i++){
@@ -196,9 +209,12 @@ function mouseClicked() {
         if (d < 100){
             console.log("moused over circle")
             circles[i].diameter = small_circle_radius + 50
+            circles[i].is_clicked = true
+            console.log(circles[i].text)
         }
         else {
             circles[i].diameter = small_circle_radius
+            circles[i].is_clicked = false
         }
     }
 }
