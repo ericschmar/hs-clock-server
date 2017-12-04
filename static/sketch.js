@@ -9,7 +9,6 @@ function Circle(){
     this.is_clicked = true
 }
 
-
 function setup() {   
     createCanvas(windowWidth, windowHeight);
     frameRate(60)
@@ -73,7 +72,6 @@ function setup() {
 
     for(i = 0; i < circles.length; i++){
         seed_random_circle_loc(circles[i])
-        console.log(circles[i].goal)
     }
 }
   
