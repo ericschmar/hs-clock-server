@@ -38,7 +38,7 @@ function setup() {
 
     c_x = windowWidth/2;
     c_y = windowHeight/2 + 100;
-    b_diameter = 640;
+    b_diameter = 600;
     s_diameter = 300;
     b_radius = b_diameter / 2;
     s_radius = s_diameter / 2;
@@ -83,11 +83,11 @@ function draw() {
     fill(157, 231, 255, 220);
     ellipse(circles[0].x, circles[0].y, circles[0].diameter)
     fill(68, 46, 23, 250)
-    //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 25)
-    text(decks[0], circles[0].original[0] + 100, circles[0].original[1] - 50)
-    stroke(0)
-    line(circles[0].x + 50, circles[0].y, circles[0].original[0] + 95, circles[0].original[1] - 45)
-    noStroke()
+    text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
+    //text(decks[0], circles[0].original[0] + 100, circles[0].original[1] - 50)
+    //stroke(0)
+    //line(circles[0].x + 50, circles[0].y, circles[0].original[0] + 95, circles[0].original[1] - 45)
+    //noStroke()
 
     draw_all_circles()
     fill(68, 46, 23, 250)
@@ -106,6 +106,25 @@ function draw() {
 function draw_all_circles(){
     circles.forEach(function(c, index){
         if(index != 0) {
+            if(index == 1 || index == 2) {
+                //new_x_y = rotato_potato(circles[index].x + 50, circles[index].y, 1.1)
+                fill(68, 46, 23, 250)
+                //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
+                //text(decks[index], circles[index].original[0] + 50, circles[index].original[1] - 50)
+                text(decks[index], circles[index].x + 50, circles[index].y - 50)
+                //stroke(0)
+                //line(new_x_y[0], new_x_y[1], circles[index].original[0] + 95, circles[index].original[1] - 45)
+                //noStroke()
+            }
+            else {
+                fill(68, 46, 23, 250)
+                //text(decks[0], circles[0].x, circles[0].y - circles[0].diameter + 35)
+                text(decks[index], circles[index].x + 50, circles[index].y + 70)
+                //stroke(0)
+                //line(circles[index].x + 50, circles[index].y, circles[index].original[0] + 105, circles[index].original[1] + 45)
+                //noStroke()
+            }
+
             ellipse(c.x, c.y, c.diameter)
         }
     })
@@ -114,8 +133,8 @@ function draw_all_circles(){
 function seed_random_circle_loc(c){
     orig_x = c.original[0]
     orig_y = c.original[1]
-    rand_x = random(orig_x - 25, orig_x + 25) 
-    rand_y = random(orig_y - 25, orig_y + 25)
+    rand_x = random(orig_x - 20, orig_x + 20) 
+    rand_y = random(orig_y - 20, orig_y + 20)
     //console.log("seed" + " " + rand_x + " " + rand_y)
     c.goal[0] = rand_x
     c.goal[1] = rand_y
